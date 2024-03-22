@@ -91,3 +91,5 @@ if __name__ == '__main__':
     s = "()))"
     expect = False
     assert Solution().isValid(s) == expect
+
+    print("DONE, no errors")
