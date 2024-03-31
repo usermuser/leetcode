@@ -24,5 +24,3 @@ try:
 except requests.exceptions.RequestException as e:
     # Обработка ошибок, связанных с сетью или другими проблемами
     print("Ошибка сети:", e)
-
-if __name__ == '__main__':
