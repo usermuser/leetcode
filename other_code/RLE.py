@@ -27,11 +27,13 @@ def rle(s):
             idx = i
             ans = s[i]
 
-        if i == len(s) - 1:  # AAA
+        if i == len(s) - 1:
             if i + 1 - idx > 1:
                 lst.append(f"{i + 1 - idx}")
 
     return "".join(lst)
 
 
-assert rle(s) == "A4B3C2XYZD4E3F3A6B28"
+if __name__ == '__main__':
+    s = "AAAABBBCCXYZDDDDEEEFFFAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+    assert rle(s) == "A4B3C2XYZD4E3F3A6B28"
