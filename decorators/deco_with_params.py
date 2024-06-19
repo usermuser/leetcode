@@ -6,6 +6,8 @@
 Декораторы позволяют вам выполнить произвольный код до/после/вместо вызова функции,
  модифицируя ее входные аргументы, результат выполнения и добавляя различные сайд-эффекты.
 """
+import time
+
 
 def decorator(call):
     def wrapper(*args, **kwargs):
@@ -79,3 +81,66 @@ def func():
  Даже если они являются декораторами для асинхронных функций
 (в таком случае асинхронным будет объявлен wrapper).
 """
+
+# Напиши декоратор, который производит замер времени, но замер можно не производить.
+def clocked(active=False):  # decorator wrapper
+    print("clocked loaded")
+
+    def real_deco(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            print(f"inside wrapper, clocked: {active}")
+
+            if active:
+                start = time.perf_counter()
+                result = func(*args, **kwargs)
+                end = time.perf_counter() - start
+                print(f"clocked done, time is {end}")
+            else:
+                result = func(*args, **kwargs)
+
+            print("wrapper is done")
+            return result
+        return wrapper
+    return real_deco
+
+@clocked(True)
+def myfunc():
+    print("start myfunc")
+    time.sleep(1.0)
+    print("done myfunc")
+
+# myfunc()
+
+
+#################################
+# для реализации декоратора который может принимать аргументы, а может и не принимать,
+# нужно сначала написать обычный декоратор,
+# а затем написать для него обёртку, получится 4 уровня сложности.
+def schrodinger_decorator(
+        call=None,
+        *,
+        active=True,
+):
+    wrap_decorator = clocked(active)
+
+    # если использовали декоратор как декоратор с параметрами
+    if call is None:
+        return wrap_decorator
+
+    else:
+        return wrap_decorator(call)
+
+@schrodinger_decorator
+def my_substractor(num1, num2):
+    result = num1 - num2
+    print(f"{result = }")
+
+
+@schrodinger_decorator(active=False)
+def my_substractor(num1, num2):
+    result = num1 - num2
+    print(f"{result = }")
+
+
+my_substractor(10, 5)
